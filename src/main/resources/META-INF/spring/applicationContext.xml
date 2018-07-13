@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--最终测试bean的配置-->
+    <bean id="springTxTest" class="com.shinnlove.springtx.calabash.tx.test.impl.SpringTxTestImpl">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="transactionTemplate" ref="transactionTemplate"/>
+        <property name="requiresNewTransactionTemplate" ref="requiresNewTransactionTemplate"/>
+        <property name="nestedTransactionTemplate" ref="nestedTransactionTemplate"/>
+        <property name="mandatoryTransactionTemplate" ref="mandatoryTransactionTemplate"/>
+        <property name="neverTransactionTemplate" ref="neverTransactionTemplate"/>
+        <property name="notSupportedTransactionTemplate" ref="notSupportedTransactionTemplate"/>
+        <property name="supportsTransactionTemplate" ref="supportsTransactionTemplate"/>
+    </bean>
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/springdemo"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <!--在数据源上配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置默认的PROPAGATION_REQUIRED事务模板（传入事务管理器）-->
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_REQUIRES_NEW的事务模板-->
+    <bean id="requiresNewTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRES_NEW"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_NESTED的事务模板-->
+    <bean id="nestedTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_NESTED"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_MANDATORY的事务模板-->
+    <bean id="mandatoryTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_MANDATORY"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_NEVER的事务模板-->
+    <bean id="neverTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_NEVER"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_NOT_SUPPORTED的事务模板-->
+    <bean id="notSupportedTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_NOT_SUPPORTED"/>
+    </bean>
+
+    <!--传播级别为PROPAGATION_SUPPORTS的事务模板-->
+    <bean id="supportsTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="propagationBehaviorName" value="PROPAGATION_SUPPORTS"/>
+    </bean>
+
+    <!--隔离级别为ISOLATION_READ_UNCOMMITTED的事务模板-->
+    <bean id="readUncommittedTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="isolationLevelName" value="ISOLATION_READ_UNCOMMITTED"/>
+    </bean>
+
+    <!--隔离级别为ISOLATION_READ_COMMITTED的事务模板-->
+    <bean id="readCommittedTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="isolationLevelName" value="ISOLATION_READ_COMMITTED"/>
+    </bean>
+
+    <!--隔离级别为ISOLATION_REPEATABLE_READ的事务模板-->
+    <bean id="repeatableReadTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="isolationLevelName" value="ISOLATION_REPEATABLE_READ"/>
+    </bean>
+
+    <!--隔离级别为ISOLATION_SERIALIZABLE的事务模板-->
+    <bean id="serializableTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="isolationLevelName" value="ISOLATION_SERIALIZABLE"/>
+    </bean>
+
+    <!-- Liquibase 配置（Liquibase是一个用于跟踪、管理和应用数据库变化的开源的数据库重构工具。它将所有数据库的变化（包括结构和数据）都保存在XML文件中，便于版本控制。） -->
+    <!--<bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">-->
+    <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--<property name="changeLog" value="classpath:META-INF/databaseChangeLog.xml"/>&lt;!&ndash;存放数据库配置&ndash;&gt;-->
+    <!--</bean>-->
+
+    <bean id="fireCalabashBoy" class="com.shinnlove.springtx.calabash.impl.FireCalabashBoy">
+        <property name="name" value="Fire Calabash"/>
+        <property name="manaConsume" value="100"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="waterCalabashBoy" class="com.shinnlove.springtx.calabash.impl.WaterCalabashBoy">
+        <property name="name" value="Water Calabash"/>
+        <property name="manaConsume" value="110"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置注解驱动事务的葫芦娃-->
+    <bean id="txCalabashBoy" class="com.shinnlove.springtx.calabash.tx.TxCalabashBoy">
+        <property name="fireCalabashBoy" ref="fireCalabashBoy"/>
+        <property name="waterCalabashBoy" ref="waterCalabashBoy"/>
+    </bean>
+
+    <!-- 支持基于注解的事务，使用的事务管理器还是上面声明的JDBC管理器 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- aopCalabashBoy是一起做两件事情，这两件事要么是在注解事务中进行、要么是在切面所声明的事务中进行 -->
+    <bean id="aopCalabashBoy" class="com.shinnlove.springtx.calabash.aop.tx.AopTxCalabashBoy">
+        <property name="fireCalabashBoy" ref="fireCalabashBoy"/>
+        <property name="waterCalabashBoy" ref="waterCalabashBoy"/>
+    </bean>
+
+    <!-- spring声明式事务，使用的manager是上边配置的 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 声明哪些方法参与声明式事务，可以配置method name="save*"之类的方法，REQUIRED是默认的事务传播行为 -->
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置切点连接声明式事务，aop:advisor可以连接tx:advice、也可以连接拦截器 -->
+    <aop:config>
+        <aop:pointcut id="skill"
+                      expression="execution(* com.shinnlove.springtx.calabash.aop.tx.AopTxCalabashBoy.skill(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="skill"/>
+    </aop:config>
+
+</beans>
